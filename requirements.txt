@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+yfinance
+sqlalchemy
+pymysql                # si usas MySQL/MariaDB
+python-jose[cryptography]  # JWT
+passlib[bcrypt]            # hash de contraseñas
+python-dotenv              # variables de entorno (.env)
+alembic                    # migraciones BD
+pydantic-settings
+python-dotenv
