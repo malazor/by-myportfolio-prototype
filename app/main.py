@@ -11,7 +11,6 @@ app = FastAPI()
 # Middlware
 origins_env = os.getenv("BACKEND_CORS_ORIGINS", "")
 origins = [o.strip() for o in origins_env.split(",") if o.strip()]
-print("CORS origins ->", origins)
 
 app.add_middleware(
     CORSMiddleware,
