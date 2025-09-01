@@ -3,10 +3,21 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from app.routes import users, assets, auth
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 
 load_dotenv()
 
 app = FastAPI()
+
+# Usa tu variable de entorno DB_URL (ya la pusimos en /etc/myportfolio/myportfolio.env)
+DB_URL = os.environ.get("DATABASE_URL")
+engine = create_engine(
+    DB_URL,
+    pool_size=5,
+    max_overflow=10,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
 
 # Middlware
 origins_env = os.getenv("BACKEND_CORS_ORIGINS", "")
@@ -29,3 +40,9 @@ app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 def root():
     print("Entra main.py")
     return {"message": "API funcionando 🚀"}
+
+@app.get("/db/health", include_in_schema=False)
+def db_health():
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    return {"db": "ok"}
