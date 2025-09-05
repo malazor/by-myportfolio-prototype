@@ -1,0 +1,47 @@
+# app/services/symbols_repository.py
+from sqlalchemy.orm import Session
+from sqlalchemy import or_
+from app.models.symbol import Symbol
+from typing import Optional
+from sqlalchemy.orm import Session
+from app.models.symbol import Symbol
+
+def get_symbol_by_id(db: Session, id: int) -> Optional[Symbol]:
+    return db.query(Symbol).filter(Symbol.id == id).first()
+
+def get_symbol_by_symbol(db: Session, symbol: str) -> Optional[Symbol]:
+    return db.query(Symbol).filter(Symbol.symbol == symbol).first()
+
+
+def find_symbols(
+    db: Session,
+    q: str | None = None,
+    limit: int = 10,
+    offset: int = 0,
+    order_by: str = "symbol",
+    order: str = "asc",
+):
+    query = db.query(Symbol)
+
+    if q:
+        pattern = f"%{q}%"
+        query = query.filter(
+            or_(
+                Symbol.symbol.like(pattern),
+                Symbol.short_name.like(pattern),
+                Symbol.name.like(pattern),
+            )
+        )
+
+    col_map = {
+        "id": Symbol.id,
+        "symbol": Symbol.symbol,
+        "name": Symbol.name,
+        "short_name": Symbol.short_name,
+    }
+    col = col_map.get(order_by, Symbol.symbol)
+    query = query.order_by(col.asc() if order.lower() == "asc" else col.desc())
+
+    total = query.count()
+    items = query.offset(offset).limit(limit).all()
+    return items, total

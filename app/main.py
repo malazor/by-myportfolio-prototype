@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from app.routes import users, assets, auth
+from app.routes import users, assets, auth, temp_prices, symbol
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
@@ -35,6 +35,11 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
+app.include_router(symbol.router, prefix="/symbol", tags=["Symbols"])
+
+# TODO: Borrar esto en el futuro.
+# Endpoints temporales
+app.include_router(temp_prices.router, prefix="/temp", tags=["Temporal"])
 
 @app.get("/")
 def root():
