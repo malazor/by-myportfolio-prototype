@@ -6,6 +6,8 @@ from app.core import deps
 from app.models.users import User 
 from datetime import date
 from app.db.crud.prices import get_by_symbol_and_date_range
+from app.util.stats import  generate_stats
+
 
 router = APIRouter()
 limit = None
@@ -29,9 +31,15 @@ def get_prices(
     # si prices son Row -> convertir a dict
     prices_out = [dict(row._mapping) for row in prices]
 
+    # generar stats
+    defe=generate_stats(prices_out)
+
     return {
         "symbol": symbol,
         "start": str(start),
         "end": str(end),
         "prices": prices_out,
+        "stats": defe
+
     }
+
