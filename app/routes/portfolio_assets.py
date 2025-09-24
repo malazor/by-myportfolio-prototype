@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.core.deps import get_db, get_current_user
 from app.core.exceptions import NotFound, NotOwner, AlreadyExistsError, InvalidInput
-from app.schemas.portfolio_assets import AddByIdIn, AddBySymbolIn, PortfolioAssetOut
+from app.schemas.portfolio_assets import AddByIdIn, AddBySymbolIn, PortfolioAssetOut, AddByIdOut
 from app.services import portfolio_asset_service as svc
 
 router = APIRouter(prefix="/{portfolio_id}/assets", tags=["PortfolioAssets"])
@@ -14,7 +14,7 @@ def map_error(e: Exception) -> HTTPException:
     if isinstance(e, svc.IntegrityError):   return HTTPException(422, detail=str(e) or "Entrada inválida")
     return HTTPException(500, detail="Error interno")
 
-@router.post("/by-id", response_model=PortfolioAssetOut, status_code=status.HTTP_201_CREATED)
+@router.post("/by-id", response_model=AddByIdOut, status_code=status.HTTP_201_CREATED)
 def add_by_id(portfolio_id: int,
               body: AddByIdIn,
               db: Session = Depends(get_db),
@@ -26,7 +26,7 @@ def add_by_id(portfolio_id: int,
     except Exception as e:
         raise map_error(e)
 
-@router.post("/by-symbol", response_model=PortfolioAssetOut, status_code=status.HTTP_201_CREATED)
+@router.post("/by-symbol", response_model=AddByIdOut, status_code=status.HTTP_201_CREATED)
 def add_by_symbol(portfolio_id: int,
                   body: AddBySymbolIn,
                   db: Session = Depends(get_db),

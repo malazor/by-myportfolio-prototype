@@ -6,13 +6,13 @@ from datetime import datetime
 from app.core.exceptions import NotFoundError, NotOwner, AlreadyExistsError
 from app.core.mapping import to_dtos
 
-from app.schemas.portfolio_assets import PortfolioAssetOut
+from app.schemas.portfolio_assets import AddByIdOut, PortfolioAssetOut
 from app.services.portfolio_asset_repository import insert_portfolio_asset, get_portfolio_owned, get_asset_by_id
 from app.services.portfolio_asset_repository import list_assets_by_portfolio as svc_list_assets_by_portfolio
 from app.services.portfolio_repository import get_by_id, is_owned_by_user
 
 
-def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> PortfolioAssetOut:
+def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> AddByIdOut:
     try:
 
         if get_portfolio_owned(db, user_id, portfolio_id) is None:
@@ -37,7 +37,8 @@ def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> Por
             detail="Asset already exists for this portfolio",
         )
     db.refresh(obj)  # asegura ids/timestamps
-    output = PortfolioAssetOut.model_validate(obj)
+    output = AddByIdOut.model_validate(obj)
+
     return output  # Pydantic v2 (from_attributes=True)
 
 def list_assets_by_portfolio(db, portfolio_id: int, user_id: int) -> list[PortfolioAssetOut]:

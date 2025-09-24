@@ -3,7 +3,14 @@ from pydantic import BaseModel, Field
 from datetime import date
 from pydantic import ConfigDict
 
-
+class AddByIdOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    portfolio_id: int
+    asset_id: int
+    cantidad: float
+    precio_compra: float
+    fecha_compra: date
 
 class AddByIdIn(BaseModel):
     asset_id: int = Field(gt=0)
