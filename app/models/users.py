@@ -1,7 +1,7 @@
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, BigInteger, String, Boolean, TIMESTAMP
 
-Base = declarative_base()
+from app.db.base import Base
 
 class User(Base):
     __tablename__ = "users"

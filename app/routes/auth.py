@@ -29,7 +29,6 @@ def get_current_payload(token: str = Depends(oauth2)):
 
 @router.post("/login")
 def login(data: Login):
-    print("Entra")
     with SessionLocal() as db:
         user = get_by_email(db, data.email)
         if not user or not user.is_active or not verify_password(data.password, user.password_hash):

@@ -1,6 +1,7 @@
 # app/models/v_prices_daily.py
 from sqlalchemy import Column, Integer, String, Date, Numeric, BigInteger
-from app.db.base_class import Base  # el mismo Base que usas para tus tablas
+
+from app.db.base import Base
 
 class VPricesDaily(Base):
     __tablename__ = "v_prices_daily"

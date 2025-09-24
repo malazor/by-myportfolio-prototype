@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String, Date, Text, TIMESTAMP
 
-Base = declarative_base()  # ⚠️ Si ya tienes un Base compartido, usa ese en su lugar.
+from app.db.base import Base
 
 # from sqlalchemy.orm import declarative_base
 

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from app.routes import users, assets, auth, temp_prices, symbol
+from app.routes import users, assets, auth, temp_prices, symbol, portfolio, portfolio_assets
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
@@ -37,6 +37,8 @@ app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(symbol.router, prefix="/symbol", tags=["Symbols"])
+app.include_router(portfolio.router, prefix="/portfolio", tags=["Portfolio"])
+app.include_router(portfolio_assets.router, prefix="/portfolio_assets", tags=["Portfolio Assets"])
 
 # TODO: Borrar esto en el futuro.
 # Endpoints temporales
@@ -44,7 +46,6 @@ app.include_router(temp_prices.router, prefix="/temp", tags=["Temporal"])
 
 @app.get("/")
 def root():
-    print("Entra main.py")
     return {"message": "API funcionando 🚀"}
 
 @app.get("/db/health", include_in_schema=False)

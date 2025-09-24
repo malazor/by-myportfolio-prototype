@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app.models.symbol import Symbol
 from typing import Optional
-from sqlalchemy.orm import Session
-from app.models.symbol import Symbol
 
 def get_symbol_by_id(db: Session, id: int) -> Optional[Symbol]:
     return db.query(Symbol).filter(Symbol.id == id).first()
