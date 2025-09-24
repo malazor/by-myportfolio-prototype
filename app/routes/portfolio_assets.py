@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
-from app.core.deps import get_db
-from app.core.deps import get_current_user  # ajusta import si difiere
+from app.core.deps import get_db, get_current_user
+from app.core.exceptions import NotFound, NotOwner, AlreadyExistsError, InvalidInput
 from app.schemas.portfolio_assets import AddByIdIn, AddBySymbolIn, PortfolioAssetOut
 from app.services import portfolio_asset_service as svc
 
@@ -9,9 +9,9 @@ router = APIRouter(prefix="/{portfolio_id}/assets", tags=["PortfolioAssets"])
 
 def map_error(e: Exception) -> HTTPException:
     if isinstance(e, svc.NotOwner):       return HTTPException(403, detail=str(e) or "No autorizado")
-    if isinstance(e, svc.NotFound):       return HTTPException(404, detail=str(e) or "No encontrado")
+    if isinstance(e, svc.NotFoundError):       return HTTPException(404, detail=str(e) or "No encontrado")
     if isinstance(e, svc.AlreadyExistsError):  return HTTPException(409, detail=str(e) or "Ya existe")
-    if isinstance(e, svc.InvalidInput):   return HTTPException(422, detail=str(e) or "Entrada inválida")
+    if isinstance(e, svc.IntegrityError):   return HTTPException(422, detail=str(e) or "Entrada inválida")
     return HTTPException(500, detail="Error interno")
 
 @router.post("/by-id", response_model=PortfolioAssetOut, status_code=status.HTTP_201_CREATED)
