@@ -5,7 +5,7 @@ from app.schemas.auth import Login
 from app.core.security import create_access_token
 from app.core.passwords import verify_password
 from app.db.session import SessionLocal
-from app.db.crud.user import get_by_email
+from app.db.crud.user import get_by_email, get_by_email_temp
 from app.core.security import create_access_token, decode_token, get_subject
 
 router = APIRouter()
@@ -30,11 +30,12 @@ def get_current_payload(token: str = Depends(oauth2)):
 @router.post("/login")
 def login(data: Login):
     with SessionLocal() as db:
-        user = get_by_email(db, data.email)
+#        user = get_by_email(db, data.email)
+        user = get_by_email_temp(db, data.email)
         if not user or not user.is_active or not verify_password(data.password, user.password_hash):
             raise HTTPException(status_code=401, detail="Credenciales inválidas")
         token = create_access_token({"sub": str(user.user_id), "email": user.email})
-        return {"access_token": token, "token_type": "bearer"}
+        return {"access_token": token, "token_type": "bearer", "user_id": user.user_id, "portfolio_id": user.portfolio_id}
     
 @router.post("/logout")
 def logout(token: str = Depends(oauth2)):
