@@ -3,15 +3,15 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 from datetime import datetime
-from app.core.exceptions import NotFoundError, NotOwner, AlreadyExistsError
+from app.core.exceptions import NotFoundError, NotOwner, AlreadyExistsError, InvalidInput
 from app.core.mapping import to_dtos
 
-from app.schemas.portfolio_assets import AddByIdOut, PortfolioAssetOut
-from app.services.portfolio_asset_repository import insert_portfolio_asset, get_portfolio_owned, get_asset_by_id
+from app.schemas.portfolio_assets import AddByIdOut, PortfolioAssetOut, RemoveByIdOut
+from app.services.portfolio_asset_repository import insert_portfolio_asset, get_portfolio_owned, get_asset_by_id, delete_portfolio_asset
 from app.services.portfolio_asset_repository import list_assets_by_portfolio as svc_list_assets_by_portfolio
 from app.services.portfolio_repository import get_by_id, is_owned_by_user
 
-
+# TODO: FIX. Error controlado cuando el asset ya esta asignado.
 def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> AddByIdOut:
     try:
 
@@ -40,6 +40,41 @@ def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> Add
     output = AddByIdOut.model_validate(obj)
 
     return output  # Pydantic v2 (from_attributes=True)
+
+def remove_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> RemoveByIdOut:
+    try:
+        if get_portfolio_owned(db, user_id, portfolio_id) is None:
+            raise NotFoundError()
+
+        if get_asset_by_id(db, dto.asset_id) is None:
+            raise NotFoundError()
+
+        obj = delete_portfolio_asset(
+            db,
+            portfolio_id=portfolio_id,
+            asset_id=dto.asset_id,
+        )
+        if obj is None:
+            # no existía la relación en portfolio_assets
+            raise NotFoundError()
+
+        output = RemoveByIdOut(
+            portfolio_id=portfolio_id,
+            asset_id=dto.asset_id,
+            deleted=True,
+        )
+
+        db.commit()
+
+    except IntegrityError:
+        db.rollback()
+        # Para delete no tiene sentido AlreadyExistsError:
+        raise InvalidInput(detail="Database integrity error while deleting asset")
+
+    # No hacer db.refresh(obj) después de un delete
+    print(f"Asset: {obj.asset_id} removed from portfolio: {obj.portfolio_id}")
+    return output
+
 
 def list_assets_by_portfolio(db, portfolio_id: int, user_id: int) -> list[PortfolioAssetOut]:
     if get_by_id(db, portfolio_id) is None:

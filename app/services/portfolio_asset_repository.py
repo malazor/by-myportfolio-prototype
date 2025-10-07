@@ -52,3 +52,28 @@ def insert_portfolio_asset(
         print(e)
     finally:
         return obj
+
+def delete_portfolio_asset(
+    db: Session,
+    portfolio_id: int,
+    asset_id: int,
+) -> PortfolioAssets | None:
+    obj = (
+        db.query(PortfolioAssets)
+        .filter(
+            PortfolioAssets.portfolio_id == portfolio_id,
+            PortfolioAssets.asset_id == asset_id,
+        )
+        .first()
+    )
+
+    if obj is None:
+        return None
+
+    try:
+        db.delete(obj)
+        db.flush()  # aplica el delete sin commitear
+    except IntegrityError as e:
+        print(e)
+    finally:
+        return obj

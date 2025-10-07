@@ -18,6 +18,15 @@ class AddByIdIn(BaseModel):
     precio_compra: float = Field(ge=0)
     fecha_compra: date
 
+class RemoveByIdIn(BaseModel):
+    asset_id: int = Field(gt=0)
+
+class RemoveByIdOut(BaseModel):
+    asset_id: int = Field(gt=0)
+    portfolio_id: int
+    deleted: bool
+
+
 class AddBySymbolIn(BaseModel):
     symbol: str
     cantidad: float = Field(gt=0)
