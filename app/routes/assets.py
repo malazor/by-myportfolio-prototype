@@ -17,3 +17,4 @@ def get_asset_price(symbol: str):
         "symbol": symbol.upper(),
         "last_price": float(last_price)
     }
+

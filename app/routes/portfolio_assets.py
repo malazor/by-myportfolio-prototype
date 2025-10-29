@@ -5,7 +5,7 @@ from app.core.exceptions import NotFound, NotOwner, AlreadyExistsError, InvalidI
 from app.schemas.portfolio_assets import AddByIdIn, AddBySymbolIn, PortfolioAssetOut, AddByIdOut, RemoveByIdIn, RemoveByIdOut
 from app.services import portfolio_asset_service as svc
 
-router = APIRouter(prefix="/{portfolio_id}/assets", tags=["PortfolioAssets"])
+router = APIRouter(prefix="/{portfolio_id}/assets")
 
 def map_error(e: Exception) -> HTTPException:
     if isinstance(e, svc.NotOwner):       return HTTPException(403, detail=str(e) or "No autorizado")

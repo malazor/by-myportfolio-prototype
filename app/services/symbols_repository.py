@@ -2,6 +2,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app.models.symbol import Symbol
+from sqlalchemy import select
+from app.models.v_asset_detail import VAssetDetail
+from app.models.v_prices_daily import VPricesDaily
 from typing import Optional
 
 def get_symbol_by_id(db: Session, id: int) -> Optional[Symbol]:
@@ -9,6 +12,19 @@ def get_symbol_by_id(db: Session, id: int) -> Optional[Symbol]:
 
 def get_symbol_by_symbol(db: Session, symbol: str) -> Optional[Symbol]:
     return db.query(Symbol).filter(Symbol.symbol == symbol).first()
+
+def get_portfolio_symbol_by_symbol(db: Session, portfolio_id: int, symbol: str) -> Optional[VAssetDetail]:
+    output = db.query(VAssetDetail).filter(VAssetDetail.symbol == symbol and VAssetDetail.portfolio_id == portfolio_id).first()
+    return output
+
+def get_symbol_history_by_symbol(db: Session, symbol: str) -> list[VPricesDaily]:
+    stmt = (
+        select(VPricesDaily)
+        .where(VPricesDaily.symbol == symbol)
+        .order_by(VPricesDaily.date.desc())
+        .limit(10)
+    )
+    return db.execute(stmt).unique().scalars().all()
 
 
 def find_symbols(

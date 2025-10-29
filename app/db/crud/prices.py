@@ -3,6 +3,8 @@ from datetime import date
 from sqlalchemy.orm import Session
 from app.models.v_prices_daily import VPricesDaily
 
+# TODO: Evaluar cambiar de paquete los _repository
+
 # TODO: Evaluar el manejo de la paginacion
 def get_by_symbol_and_date_range(
     db: Session,

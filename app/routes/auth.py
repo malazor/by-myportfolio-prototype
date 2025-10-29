@@ -34,7 +34,7 @@ def login(data: Login):
         user = get_by_email_temp(db, data.email)
         if not user or not user.is_active or not verify_password(data.password, user.password_hash):
             raise HTTPException(status_code=401, detail="Credenciales inválidas")
-        token = create_access_token({"sub": str(user.user_id), "email": user.email})
+        token = create_access_token({"sub": str(user.user_id), "email": user.email, "portfolio_id": user.portfolio_id})
         return {"access_token": token, "token_type": "bearer", "user_id": user.user_id, "portfolio_id": user.portfolio_id}
     
 @router.post("/logout")

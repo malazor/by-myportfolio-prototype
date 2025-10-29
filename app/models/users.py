@@ -20,6 +20,7 @@ class UserAuth(Base):
     user_id = Column(BigInteger)
     portfolio_id = Column(BigInteger, nullable=False)
     email = Column(String(255), nullable=False)
+    username = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
     password_hash = Column(String(255), nullable=False)
 

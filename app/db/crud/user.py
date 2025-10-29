@@ -5,4 +5,4 @@ def get_by_email(db: Session, email: str) -> User | None:
     return db.query(User).filter(User.email == email).first()
 
 def get_by_email_temp(db: Session, email: str) -> UserAuth | None:
-    return db.query(UserAuth).filter(User.email == email).first()
+    return db.query(UserAuth).filter(UserAuth.email == email).first()
