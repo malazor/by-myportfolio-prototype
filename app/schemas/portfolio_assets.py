@@ -15,8 +15,6 @@ class AddByIdOut(BaseModel):
 class AddByIdIn(BaseModel):
     asset_id: int = Field(gt=0)
     cantidad: float = Field(gt=0)
-    precio_compra: float = Field(ge=0)
-    fecha_compra: date
 
 class RemoveByIdIn(BaseModel):
     asset_id: int = Field(gt=0)

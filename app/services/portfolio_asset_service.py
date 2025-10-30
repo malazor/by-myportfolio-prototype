@@ -10,6 +10,7 @@ from app.schemas.portfolio_assets import AddByIdOut, PortfolioAssetOut, RemoveBy
 from app.services.portfolio_asset_repository import insert_portfolio_asset, get_portfolio_owned, get_asset_by_id, delete_portfolio_asset
 from app.services.portfolio_asset_repository import list_assets_by_portfolio as svc_list_assets_by_portfolio
 from app.services.portfolio_repository import get_by_id, is_owned_by_user
+from app.services.symbols_repository import get_last_price_by_id
 
 # TODO: FIX. Error controlado cuando el asset ya esta asignado.
 def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> AddByIdOut:
@@ -26,7 +27,7 @@ def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> Add
                 portfolio_id= portfolio_id,
                 asset_id= dto.asset_id,
                 cantidad= dto.cantidad,
-                precio_compra= dto.precio_compra,
+                precio_compra= get_last_price_by_id(db, dto.asset_id)[0].close,
                 fecha_compra= datetime.today(),
                 )
                 db.commit()
@@ -36,6 +37,9 @@ def add_asset_by_id(db, user_id, portfolio_id, dto, idempotency_key=None) -> Add
             status_code=status.HTTP_409_CONFLICT,
             detail="Asset already exists for this portfolio",
         )
+    except Exception as e:
+        print(e)
+        db.rollback()
     db.refresh(obj)  # asegura ids/timestamps
     output = AddByIdOut.model_validate(obj)
 

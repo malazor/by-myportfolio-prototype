@@ -21,8 +21,13 @@ sudo -u myportfolio -H git -C /opt/myportfolio log -1 --oneline origin/master
 
 ## 4.- Si ves diferencias, actualiza
 
-<pre>
+<pre> bash
 sudo -u myportfolio -H git -C /opt/myportfolio pull --rebase
+
+sudo -u myportfolio -H git -C /opt/myportfolio fetch origin
+sudo -u myportfolio -H git -C /opt/myportfolio checkout develop-0.7
+sudo -u myportfolio -H git -C /opt/myportfolio pull --rebase origin develop-0.7
+
 </pre>
 
 ## 5.- (Opcional) Actualiza dependencias si cambió requirements.txt

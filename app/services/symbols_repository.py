@@ -26,6 +26,15 @@ def get_symbol_history_by_symbol(db: Session, symbol: str) -> list[VPricesDaily]
     )
     return db.execute(stmt).unique().scalars().all()
 
+def get_last_price_by_id(db: Session, asset_id: int) -> list[VPricesDaily]:
+    stmt = (
+        select(VPricesDaily)
+        .where(VPricesDaily.symbol_id == asset_id)
+        .order_by(VPricesDaily.date.desc())
+        .limit(1)
+    )
+    return db.execute(stmt).unique().scalars().all()
+
 
 def find_symbols(
     db: Session,

@@ -24,7 +24,100 @@
 
 - `200 OK`
   ```json
-  { "items": [{ "symbol": "AAPL", "name": "Apple Inc." }], "total": 1 }
+  {
+    "id": 10,
+    "header": {
+      "symbol": "NVDA",
+      "current_price": 201.029999,
+      "entry_price": 190.96,
+      "diff": 10.069999,
+      "trend": 1
+    },
+    "body": {
+      "name": "NVIDIA Corporation",
+      "exchange": "NasdaqGS",
+      "currency": "USD",
+      "market_tz": "us_market",
+      "status": "active",
+      "country": "United States",
+      "sector": "Technology",
+      "industry": "Semiconductors",
+      "website": "https://www.nvidia.com",
+      "quote_type": "EQUITY"
+    },
+    "history": [
+      {
+        "open": 193.050003,
+        "high": 203.149994,
+        "low": 191.910004,
+        "close": 201.029999,
+        "volume": 295848900
+      },
+      {
+        "open": 189.990005,
+        "high": 192.0,
+        "low": 188.429993,
+        "close": 191.490005,
+        "volume": 153452700
+      },
+      {
+        "open": 183.839996,
+        "high": 187.470001,
+        "low": 183.5,
+        "close": 186.259995,
+        "volume": 131296700
+      },
+      {
+        "open": 180.419998,
+        "high": 183.029999,
+        "low": 179.789993,
+        "close": 182.160004,
+        "volume": 111363700
+      },
+      {
+        "open": 181.139999,
+        "high": 183.440002,
+        "low": 176.759995,
+        "close": 180.279999,
+        "volume": 162249600
+      },
+      {
+        "open": 182.789993,
+        "high": 182.789993,
+        "low": 179.800003,
+        "close": 181.160004,
+        "volume": 124240200
+      },
+      {
+        "open": 183.130005,
+        "high": 185.199997,
+        "low": 181.729996,
+        "close": 182.639999,
+        "volume": 128544700
+      },
+      {
+        "open": 180.179993,
+        "high": 184.100006,
+        "low": 179.75,
+        "close": 183.220001,
+        "volume": 173135200
+      },
+      {
+        "open": 182.229996,
+        "high": 183.279999,
+        "low": 179.770004,
+        "close": 181.809998,
+        "volume": 179723300
+      },
+      {
+        "open": 184.800003,
+        "high": 184.869995,
+        "low": 177.289993,
+        "close": 179.830002,
+        "volume": 214450500
+      }
+    ]
+  }
   ```
 
 ### Schemas:
@@ -35,7 +128,7 @@
     id: int
     header: HeaderDict
     body: BodyDict
-    history: HistoryDict
+    history: list[HistoryDict]
   ```
 
 - `HeaderDict`
