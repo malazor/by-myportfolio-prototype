@@ -8,6 +8,7 @@ class PriceItem(BaseModel):
     low:  float | None = None
     close: float | None = None
     volume: int | None = None
+    
 
 class PricesOut(BaseModel):
     symbol: str

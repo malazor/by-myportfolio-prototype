@@ -35,7 +35,8 @@ app.add_middleware(
 # Incluir routers
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(assets.router, prefix="/assets", tags=["Assets"])
+
+# TODO: Cambiar el nombre tanto en BBDD como en BE Symbol a Asset
 app.include_router(symbol.router, prefix="/symbol", tags=["Symbols"])
 app.include_router(portfolio.router, prefix="/portfolio", tags=["Portfolio"])
 app.include_router(portfolio_assets.router, prefix="/portfolio_assets", tags=["Portfolio Assets"])
@@ -43,6 +44,7 @@ app.include_router(portfolio_assets.router, prefix="/portfolio_assets", tags=["P
 # TODO: Borrar esto en el futuro.
 # Endpoints temporales
 app.include_router(temp_prices.router, prefix="/temp", tags=["Temporal"])
+app.include_router(assets.router, prefix="/temp/assets", tags=["Temporal Assets"])
 
 @app.get("/")
 def root():

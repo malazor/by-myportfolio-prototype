@@ -1,7 +1,7 @@
 # app/models/portfolio.py
 from sqlalchemy import (
     Column, BigInteger, String, Text, CHAR, TIMESTAMP,
-    ForeignKey, UniqueConstraint, text
+    ForeignKey, UniqueConstraint, text, Numeric
 )
 from app.db.base import Base
 
@@ -22,3 +22,7 @@ class Portfolio(Base):
 
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    market_value = Column(Numeric(18,6))
+    ratio_sharpe = Column(Numeric(18,6))
+    volatility = Column(Numeric(18,6))
+

@@ -6,6 +6,7 @@ from sqlalchemy import select
 from app.models.v_asset_detail import VAssetDetail
 from app.models.v_prices_daily import VPricesDaily
 from typing import Optional
+from datetime import date
 
 def get_symbol_by_id(db: Session, id: int) -> Optional[Symbol]:
     return db.query(Symbol).filter(Symbol.id == id).first()
@@ -17,13 +18,30 @@ def get_portfolio_symbol_by_symbol(db: Session, portfolio_id: int, symbol: str) 
     output = db.query(VAssetDetail).filter(VAssetDetail.symbol == symbol and VAssetDetail.portfolio_id == portfolio_id).first()
     return output
 
-def get_symbol_history_by_symbol(db: Session, symbol: str) -> list[VPricesDaily]:
+# TODO: Fusionar metodos Get History
+def get_symbol_history_by_symbol(db: Session, id:int, symbol: str, start_date: date, end_date: date, order: str, limit: int) -> list[VPricesDaily]:
     stmt = (
         select(VPricesDaily)
-        .where(VPricesDaily.symbol == symbol)
-        .order_by(VPricesDaily.date.desc())
-        .limit(10)
     )
+
+    if id:
+        stmt = stmt.where(VPricesDaily.symbol_id == id)
+    if symbol:
+        stmt = stmt.where(VPricesDaily.symbol == symbol)
+    if start_date:
+        stmt = stmt.where(VPricesDaily.date >= start_date)
+    if end_date:
+        stmt = stmt.where(VPricesDaily.date <= end_date)
+
+    if order=='desc':
+        stmt = stmt.order_by(VPricesDaily.date.desc())
+
+    if limit:
+        stmt = stmt.limit(limit)
+    print("Start date: ",start_date)
+    print("End date: ",end_date)
+    print(stmt)
+
     return db.execute(stmt).unique().scalars().all()
 
 def get_last_price_by_id(db: Session, asset_id: int) -> list[VPricesDaily]:

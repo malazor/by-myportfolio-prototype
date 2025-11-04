@@ -56,10 +56,12 @@ def get_symbol_snapshot(db: Session, portfolio_id: int, symbol: str) -> SymbolDe
         body["website"]=item.website
         body["quote_type"]=item.quote_type
 
-        out = get_symbol_history_by_symbol(db,symbol)
+# TODO: Parametrizar alcance del historial
+        out = get_symbol_history_by_symbol(db,None,symbol,None,None,"desc", 10)
         if out:
             for r in out:
                 history_dict = {
+                    "date":r.date,
                     "open":r.open,
                     "close":r.close,
                     "high":r.high,

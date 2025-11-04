@@ -41,6 +41,12 @@ class PortfolioCreate(PortfolioBase):
 class PortfolioOut(PortfolioBase):
     portfolio_id: int
     user_id: int
+    name: str
+    description: str
+    currency: str
+    market_value: float
+    ratio_sharpe: float
+    volatility: float
     is_active: bool
     created_at: datetime
     updated_at: datetime    

@@ -70,6 +70,7 @@ class BodyDict(TypedDict):
     quote_type: str
 
 class HistoryDict(TypedDict):
+    date: date
     open: float
     high: float
     low: float
