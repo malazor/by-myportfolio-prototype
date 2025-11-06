@@ -4,12 +4,16 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 
 from app.schemas.portfolio import PortfolioCreate, PortfolioOut
-from app.services.portfolio_repository import create as repo_create, get_portfolio_by_id
+from app.services.portfolio_repository import create as repo_create, get_portfolio_by_id, create_portfolio_snapshot
 from app.services.portfolio_asset_repository import list_assets_by_portfolio
 from app.services.symbols_repository import get_symbol_history_by_symbol
 
 from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
+
+from app.util.stats import calculate_market_value, calculate_ratio_sharpe, calculate_volatility
+
 
 
 def create_portfolio(db: Session, user_id: int, payload: PortfolioCreate) -> PortfolioOut:
@@ -71,25 +75,31 @@ def take_portfolio_snapshot(db: Session, portfolio_id: int) -> PortfolioOut:
                     for j in history:
                         history_record = {
                             "date":j.date,
-                            "open": j.open,
-                            "close": j.close,
-                            "high": j.high,
-                            "low": j.low,
-                            "volume": j.volume
+                            "symbol": j.symbol,
+                            "open": float(j.open),
+                            "close": float(j.close),
+                            "high": float(j.high),
+                            "low": float(j.low),
+                            "volume": float(j.volume)
                         }
                         history_list.append(history_record)
                     history_dict = {
                         "assets":i.symbol,
                         "history":history_list
                     }
-                else:
-                    print("No hay dict.")
-
         values = {"assets":asset_list, "history":history_dict}
-        print(values)
+
+        update_values = {
+            "market_value": calculate_market_value(asset_list),
+            "ratio_sharpe": calculate_ratio_sharpe(history_dict),
+            "volatility": calculate_volatility(history_dict)
+        }
+
+        out = create_portfolio_snapshot(db, portfolio_id, update_values)
 
         output = get_portfolio_by_id(db, portfolio_id)
 
     except Exception as e:
         print(e)
     return output
+

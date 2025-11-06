@@ -38,9 +38,6 @@ def get_symbol_history_by_symbol(db: Session, id:int, symbol: str, start_date: d
 
     if limit:
         stmt = stmt.limit(limit)
-    print("Start date: ",start_date)
-    print("End date: ",end_date)
-    print(stmt)
 
     return db.execute(stmt).unique().scalars().all()
 

@@ -46,18 +46,19 @@ def get_portfolio_by_id(db: Session, portfolio_id: int) -> Optional[Portfolio]:
         .where(Portfolio.portfolio_id == portfolio_id)
         .limit(1)
     )
-
     return db.execute(stmt).scalar_one_or_none()
+
+# TODO: Revisar si es adecuado mezclar 2 queries a este nivel de capas.
 def create_portfolio_snapshot(db: Session, portfolio_id: int, values: dict) -> Optional[Portfolio]:
+    # Ejecutar UPDATE
     stmt = (
         update(Portfolio)
         .where(Portfolio.portfolio_id == portfolio_id)
-        .values(values)
-        .returning(Portfolio)
+        .values(**values)
     )
-
-    result = db.execute(stmt).scalar_one_or_none()
+    db.execute(stmt)
     db.commit()
-    return result
 
-
+    # Recuperar el objeto actualizado
+    # stmt_select = select(Portfolio).where(Portfolio.portfolio_id == portfolio_id)
+    # return db.execute(stmt_select).scalar_one_or_none()
