@@ -22,7 +22,8 @@ class Portfolio(Base):
 
     created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    market_value = Column(Numeric(18,6))
+    market_value_1 = Column(Numeric(18,6))
     ratio_sharpe = Column(Numeric(18,6))
     volatility = Column(Numeric(18,6))
+    market_value_2 = Column(Numeric(18,6))
 

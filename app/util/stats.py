@@ -48,21 +48,20 @@ def generate_stats(prices):
 
     return output
 
-def calculate_market_value(data: list[dict]) -> float:
+def calculate_initial_market_value(data: list[dict]) -> float:
     total_cantidad = sum(item["cantidad"] for item in data)
     if total_cantidad == 0:
         return 0.0
     return sum((item["cantidad"] / total_cantidad) * item["precio_compra"] for item in data)
 
+def calculate_current_market_value(data: list[dict]) -> float:
+    total_cantidad = sum(item["cantidad"] for item in data)
+    if total_cantidad == 0:
+        return 0.0
+    return sum((item["cantidad"] / total_cantidad) * item["precio_actual"] for item in data)
+
 def calculate_ratio_sharpe(input) -> float:
     output = 0
-    try:
-        # df = pd.DataFrame(input)
-        # print(df)      
-        pass
-    except Exception as e:
-        print(e)
-
     return output
 
 def calculate_volatility(input: dict) -> float:

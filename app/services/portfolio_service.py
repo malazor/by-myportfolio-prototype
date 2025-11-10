@@ -12,7 +12,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from app.util.stats import calculate_market_value, calculate_ratio_sharpe, calculate_volatility
+from app.util.stats import calculate_initial_market_value, calculate_ratio_sharpe, calculate_volatility, calculate_current_market_value
 
 
 
@@ -69,9 +69,9 @@ def take_portfolio_snapshot(db: Session, portfolio_id: int) -> PortfolioOut:
                     "cantidad":i.cantidad,
                     "precio_compra":i.precio_compra
                 }
-                asset_list.append(assets_dict)
-                history = get_symbol_history_by_symbol(db,None,i.symbol,datetime.now() - relativedelta(years=3),datetime.now(),"desc", None)
+                history = get_symbol_history_by_symbol(db,None,i.symbol,datetime.now() - relativedelta(years=3),datetime.now(),"asc", None)
                 if history:
+                    assets_dict["precio_actual"] = history[-1].close
                     for j in history:
                         history_record = {
                             "date":j.date,
@@ -87,12 +87,14 @@ def take_portfolio_snapshot(db: Session, portfolio_id: int) -> PortfolioOut:
                         "assets":i.symbol,
                         "history":history_list
                     }
+                asset_list.append(assets_dict)
         values = {"assets":asset_list, "history":history_dict}
 
         update_values = {
-            "market_value": calculate_market_value(asset_list),
-            "ratio_sharpe": calculate_ratio_sharpe(history_dict),
+            "market_value_1": calculate_initial_market_value(asset_list),
+            "ratio_sharpe": calculate_ratio_sharpe(history_list),
             "volatility": calculate_volatility(history_dict)
+            ,"market_value_2": calculate_current_market_value(asset_list),
         }
 
         out = create_portfolio_snapshot(db, portfolio_id, update_values)

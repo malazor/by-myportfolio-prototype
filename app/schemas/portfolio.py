@@ -44,7 +44,8 @@ class PortfolioOut(PortfolioBase):
     name: str
     description: str
     currency: str
-    market_value: float
+    market_value_1: float
+    market_value_2: float
     ratio_sharpe: float
     volatility: float
     is_active: bool
