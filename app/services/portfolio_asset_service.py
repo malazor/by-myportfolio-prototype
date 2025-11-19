@@ -119,6 +119,11 @@ def get_asset_snapshot(db: Session, portfolio_id: int, symbol: str, asset_id: in
             item = get_portfolio_symbol_by_id(db, portfolio_id, asset_id)
         else:
             item = get_portfolio_symbol_by_symbol(db, portfolio_id, symbol)
+        
+        if item is None:
+            raise NotFoundError()
+
+
         output["id"]=item.id
         header["symbol"]=item.symbol
         header["current_price"]=item.current_price
@@ -161,8 +166,9 @@ def get_asset_snapshot(db: Session, portfolio_id: int, symbol: str, asset_id: in
         output["body"]=body
         output["history"]=history
 
-
+    except NotFoundError:
+        raise HTTPException(status_code=404, detail="Symbol or portfolio not found for user.")
     except Exception as e:
-        print(e)
+        raise HTTPException(status_code=501, detail="Error no controlado.")
     return output
 
