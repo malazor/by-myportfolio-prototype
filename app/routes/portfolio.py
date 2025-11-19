@@ -6,9 +6,6 @@ from app.schemas.portfolio import PortfolioCreate, PortfolioOut
 from app.core.deps import get_current_user, get_db  # tu helper en deps
 from app.services.portfolio_service import create_portfolio as create_portfolio_service, get_portfolio_snapshot, take_portfolio_snapshot
 
-
-
-
 router = APIRouter()
 # TODO: Averiguar pq PortfolioCreate es obligatorio y donde se configura
 @router.post("/", response_model=PortfolioOut, status_code=status.HTTP_201_CREATED)
@@ -21,6 +18,7 @@ def create_portfolio_endpoint(
     return create_portfolio_service(db, user_id, payload)
 
 
+# TODO: Implementar excepcion a portafolio no enconitrado
 @router.get("/{id:int}", response_model=PortfolioOut, status_code=status.HTTP_201_CREATED)
 def get_portfolio(
     id: int,
@@ -30,6 +28,7 @@ def get_portfolio(
     out = get_portfolio_snapshot(db, id)
     return out
 
+# Investigar por que lanza error en el portfolio numero 15
 @router.post("/snapshot/{id:int}", response_model=PortfolioOut, status_code=status.HTTP_201_CREATED)
 def create_portfolio_snapshot(
     id: int,

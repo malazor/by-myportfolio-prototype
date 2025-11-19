@@ -24,7 +24,7 @@ def get_by_user_and_name(db: Session, user_id: int, name: str) -> Optional[Portf
 
 
 def create(
-    db: Session, *, user_id: int, name: str, description: str, currency: str, market_value: float, ratio_sharpe: float, volatility: float
+    db: Session, *, user_id: int, name: str, description: str, currency: str, market_value_1: float, ratio_sharpe: float, volatility: float, market_value_2: float
 ) -> Portfolio:
     obj = Portfolio(
         user_id=user_id,
@@ -32,9 +32,10 @@ def create(
         description=description,
         currency=currency,
         is_active=1,
-        market_value=market_value,
+        market_value_1=market_value_1,
         ratio_sharpe=ratio_sharpe,
         volatility=volatility,
+        market_value_2=market_value_2,
     )
     db.add(obj)
     db.flush()

@@ -24,9 +24,10 @@ def create_portfolio(db: Session, user_id: int, payload: PortfolioCreate) -> Por
             name=payload.name,
             description=payload.description,
             currency=payload.currency,
-            market_value=0,
+            market_value_1=0,
             ratio_sharpe=0,
             volatility=0,
+            market_value_2=0,
         )
         db.commit()
     except IntegrityError:

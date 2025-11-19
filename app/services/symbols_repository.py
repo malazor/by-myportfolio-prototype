@@ -18,6 +18,10 @@ def get_portfolio_symbol_by_symbol(db: Session, portfolio_id: int, symbol: str) 
     output = db.query(VAssetDetail).filter(VAssetDetail.symbol == symbol and VAssetDetail.portfolio_id == portfolio_id).first()
     return output
 
+def get_portfolio_symbol_by_id(db: Session, portfolio_id: int, asset_id: int) -> Optional[VAssetDetail]:
+    output = db.query(VAssetDetail).filter(VAssetDetail.asset_id == asset_id and VAssetDetail.portfolio_id == portfolio_id).first()
+    return output
+
 # TODO: Fusionar metodos Get History
 def get_symbol_history_by_symbol(db: Session, id:int, symbol: str, start_date: date, end_date: date, order: str, limit: int) -> list[VPricesDaily]:
     stmt = (

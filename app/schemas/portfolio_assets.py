@@ -16,10 +16,14 @@ class AddByIdIn(BaseModel):
     asset_id: int = Field(gt=0)
     cantidad: float = Field(gt=0)
 
+class RemoveBySymbolIn(BaseModel):
+    symbol: str
+
+
 class RemoveByIdIn(BaseModel):
     asset_id: int = Field(gt=0)
 
-class RemoveByIdOut(BaseModel):
+class RemoveAssetOut(BaseModel):
     asset_id: int = Field(gt=0)
     portfolio_id: int
     deleted: bool
@@ -28,8 +32,6 @@ class RemoveByIdOut(BaseModel):
 class AddBySymbolIn(BaseModel):
     symbol: str
     cantidad: float = Field(gt=0)
-    precio_compra: float = Field(ge=0)
-    fecha_compra: date
 
 class PortfolioAssetOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)

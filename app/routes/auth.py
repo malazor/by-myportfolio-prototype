@@ -37,11 +37,6 @@ def login(data: Login):
         token = create_access_token({"sub": str(user.user_id), "email": user.email, "portfolio_id": user.portfolio_id})
         return {"access_token": token, "token_type": "bearer", "user_id": user.user_id, "portfolio_id": user.portfolio_id}
     
-@router.post("/logout")
-def logout(token: str = Depends(oauth2)):
-    TOKEN_BLACKLIST.add(token)
-    return {"ok": True}
-
 @router.get("/me")
 def me(current=Depends(get_current_payload)):
     return {"id": get_subject(current), "email": current.get("email")}
